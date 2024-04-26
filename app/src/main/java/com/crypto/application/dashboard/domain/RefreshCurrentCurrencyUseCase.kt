@@ -4,6 +4,7 @@ import com.crypto.application.app.prefs.PreferencesStorage
 import com.crypto.application.common.data.CurrencyStorage
 import com.crypto.application.dashboard.data.CurrencyRepository
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class RefreshCurrentCurrencyUseCase @Inject constructor(
@@ -30,6 +31,6 @@ class RefreshCurrentCurrencyUseCase @Inject constructor(
 
     private fun hoursBetween(startDate: Long, endDate: Long): Long {
         val diff = endDate - startDate
-        return diff / (1000 * 60 * 60)
+        return diff / TimeUnit.HOURS.toMillis(1)
     }
 }
