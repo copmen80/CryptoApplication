@@ -19,9 +19,12 @@ import com.crypto.application.app.ui.theme.Purple
 import com.crypto.application.app.ui.theme.Turquoise
 import com.crypto.application.newtransaction.ui.model.TransactionType
 import com.crypto.application.newtransaction.ui.model.TransactionUiModel
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 @Composable
 fun TransactionItem(transactionUiModel: TransactionUiModel) {
+    val dateFormat = SimpleDateFormat("EEEE MMMM dd HH:mm", Locale.getDefault())
 
     Row(
         Modifier
@@ -52,7 +55,7 @@ fun TransactionItem(transactionUiModel: TransactionUiModel) {
             }
             Spacer(modifier = Modifier.height(12.dp))
             Text(
-                text = transactionUiModel.time.time.toString(),
+                text = dateFormat.format(transactionUiModel.time.time),
                 color = Turquoise,
                 fontSize = 10.sp
             )

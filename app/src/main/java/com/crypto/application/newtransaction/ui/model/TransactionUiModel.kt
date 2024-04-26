@@ -9,7 +9,7 @@ enum class TransactionType {
 }
 
 sealed class DashboardItemUiModel
-data class TransactionDateUiModel(val time: Calendar?) : DashboardItemUiModel()
+data class TransactionDateUiModel(val time: String?) : DashboardItemUiModel()
 data class TransactionUiModel(
     val time: Calendar,
     val amount: Float,

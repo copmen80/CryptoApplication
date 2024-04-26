@@ -17,7 +17,9 @@ import com.crypto.application.newtransaction.ui.model.TransactionUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,12 +37,18 @@ class DashboardViewModel @Inject constructor(
         pagingData
             .map { transactionUiModelMapper.map(it) }
             .insertSeparators { transactionsA, transactionsB ->
-                val dayA = (transactionsA as? TransactionUiModel)?.time?.get(Calendar.DAY_OF_YEAR)?: 0
-                val dayB = (transactionsB as? TransactionUiModel)?.time?.get(Calendar.DAY_OF_YEAR)?: 0
-                if (dayB!= 0 && dayA != dayB) {
-                    TransactionDateUiModel((transactionsB as? TransactionUiModel)?.time)
+                val dayA =
+                    (transactionsA as? TransactionUiModel)?.time?.get(Calendar.DAY_OF_YEAR) ?: 0
+                val dayB =
+                    (transactionsB as? TransactionUiModel)?.time?.get(Calendar.DAY_OF_YEAR) ?: 0
+                if (dayB != 0 && dayA != dayB) {
+                    val dateFormat = SimpleDateFormat("EEEE MMMM dd", Locale.getDefault())
+                    val formattedDate = (transactionsB as? TransactionUiModel)?.time?.time?.let {
+                        dateFormat.format(it)
+                    }
+                    TransactionDateUiModel(formattedDate)
                 } else null
-        }
+            }
     }.cachedIn(viewModelScope)
 
     val balance = balanceStorage.flow

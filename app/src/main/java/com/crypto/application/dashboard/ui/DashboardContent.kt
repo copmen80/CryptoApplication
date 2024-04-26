@@ -112,7 +112,7 @@ fun DashboardContent(
 
             items(transactionsPagingItems.itemCount) {
                 when (val dashboardUiModel = transactionsPagingItems[it]) {
-                    is TransactionDateUiModel -> Text(text = dashboardUiModel.time?.time.toString())
+                    is TransactionDateUiModel -> Text(text = dashboardUiModel.time.toString())
                     is TransactionUiModel -> TransactionItem(dashboardUiModel)
                     null -> Unit
                 }
