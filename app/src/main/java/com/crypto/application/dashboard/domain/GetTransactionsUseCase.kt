@@ -18,5 +18,4 @@ class GetTransactionsUseCase @Inject constructor(
             prefetchDistance = 10
         )
     ) { transactionsRepository.getAllTransaction() }.flow
-
 }
