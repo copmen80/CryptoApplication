@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.crypto.application.R
+import com.crypto.application.app.constants.MAX_SYMBOLS_INPUT
 import com.crypto.application.app.ui.theme.Black
 import com.crypto.application.app.ui.theme.Purple
 import com.crypto.application.app.ui.theme.Turquoise
@@ -63,6 +64,7 @@ fun NewTransactionContent(
         stringResource(R.string.other)
     )
     val (selectedOption, onOptionSelected) = remember { mutableStateOf(categoriesOptions[0]) }
+    val expression = Regex("\\d*[.]?\\d*")
 
     Column(
         Modifier
@@ -95,7 +97,9 @@ fun NewTransactionContent(
             modifier = Modifier.fillMaxWidth(),
             value = transactionAmount,
             onValueChange = {
-                transactionAmount = it
+                if (it.length <= MAX_SYMBOLS_INPUT && it.matches(expression)) {
+                    transactionAmount = it
+                }
             },
             placeholder = {
                 Text(
@@ -105,7 +109,7 @@ fun NewTransactionContent(
                 )
             },
             shape = RoundedCornerShape(12.dp),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             colors = TextFieldDefaults.textFieldColors(
                 focusedIndicatorColor = Purple,
                 unfocusedIndicatorColor = Purple,
@@ -154,7 +158,7 @@ fun NewTransactionContent(
                 addNewTransaction(
                     TransactionUiModel(
                         time = Calendar.getInstance(),
-                        amount = transactionAmount.toInt(),
+                        amount = transactionAmount.toFloat(),
                         category = selectedOption,
                         type = TransactionType.WITHDRAWAL
                     )

@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.crypto.application.R
+import com.crypto.application.app.constants.MAX_SYMBOLS_INPUT
 import com.crypto.application.app.ui.theme.Purple
 import com.crypto.application.app.ui.theme.Turquoise
 import com.crypto.application.newtransaction.ui.model.TransactionType
@@ -48,6 +49,7 @@ fun ActionDialog(
     addNewTransaction: (TransactionUiModel) -> Unit = {}
 ) {
     var transactionAmount by remember { mutableStateOf("") }
+    val expression = Regex("\\d*[.]?\\d*")
 
 
     Dialog(
@@ -77,7 +79,9 @@ fun ActionDialog(
                     .padding(12.dp),
                 value = transactionAmount,
                 onValueChange = {
-                    transactionAmount = it
+                    if (it.length <= MAX_SYMBOLS_INPUT && it.matches(expression)) {
+                        transactionAmount = it
+                    }
                 },
                 placeholder = {
                     Text(
@@ -87,7 +91,7 @@ fun ActionDialog(
                     )
                 },
                 shape = RoundedCornerShape(12.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 colors = TextFieldDefaults.textFieldColors(
                     focusedIndicatorColor = Purple,
                     unfocusedIndicatorColor = Purple,
@@ -126,7 +130,7 @@ fun ActionDialog(
                             addNewTransaction(
                                 TransactionUiModel(
                                     time = Calendar.getInstance(),
-                                    amount = transactionAmount.toInt(),
+                                    amount = transactionAmount.toFloat(),
                                     type = TransactionType.DEPOSIT
                                 )
                             )

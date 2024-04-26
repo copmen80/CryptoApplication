@@ -12,7 +12,7 @@ sealed class DashboardItemUiModel
 data class TransactionDateUiModel(val time: Calendar?) : DashboardItemUiModel()
 data class TransactionUiModel(
     val time: Calendar,
-    val amount: Int,
+    val amount: Float,
     val category: String? = null,
     val type: TransactionType,
 ) : DashboardItemUiModel()

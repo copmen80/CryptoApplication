@@ -8,7 +8,7 @@ import java.util.Calendar
 @Entity(tableName = "transactions")
 data class TransactionsEntity(
     @PrimaryKey val time: Calendar,
-    val amount: Int,
+    val amount: Float,
     val category: String? = null,
     val transactionType: TransactionType
 )
