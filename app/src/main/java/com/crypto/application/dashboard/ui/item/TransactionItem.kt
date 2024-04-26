@@ -1,6 +1,8 @@
 package com.crypto.application.dashboard.ui.item
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +31,7 @@ fun TransactionItem(transactionUiModel: TransactionUiModel) {
     Row(
         Modifier
             .fillMaxWidth()
+            .border(BorderStroke(1.dp, Turquoise), RoundedCornerShape(12.dp))
             .clip(RoundedCornerShape(12.dp))
             .background(Purple)
             .padding(12.dp)

@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -27,6 +28,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
@@ -38,6 +40,7 @@ import com.crypto.application.dashboard.ui.item.TransactionItem
 import com.crypto.application.newtransaction.ui.model.DashboardItemUiModel
 import com.crypto.application.newtransaction.ui.model.TransactionDateUiModel
 import com.crypto.application.newtransaction.ui.model.TransactionUiModel
+import com.crypto.application.utills.InitialLoadingWidget
 import kotlinx.coroutines.flow.Flow
 
 @Composable
@@ -65,10 +68,10 @@ fun DashboardContent(
                     .border(BorderStroke(1.dp, Turquoise), RoundedCornerShape(12.dp))
             ) {
                 Text(
-                    text = "Balance: $balance",
+                    text = "Balance: ₿$balance",
                     modifier = Modifier.padding(8.dp),
                     color = Turquoise,
-                    fontSize = 16.sp
+                    fontSize = 14.sp
                 )
             }
             Spacer(modifier = Modifier.width(12.dp))
@@ -84,10 +87,10 @@ fun DashboardContent(
                     .border(BorderStroke(1.dp, Turquoise), RoundedCornerShape(12.dp))
             ) {
                 Text(
-                    text = "Currency: $currency",
+                    text = "Currency: $$currency",
                     modifier = Modifier.padding(8.dp),
                     color = Turquoise,
-                    fontSize = 16.sp
+                    fontSize = 14.sp
                 )
             }
 
@@ -109,14 +112,46 @@ fun DashboardContent(
             verticalArrangement = Arrangement.spacedBy(4.dp),
             contentPadding = PaddingValues(bottom = 74.dp),
         ) {
-
             items(transactionsPagingItems.itemCount) {
                 when (val dashboardUiModel = transactionsPagingItems[it]) {
                     is TransactionDateUiModel -> Text(text = dashboardUiModel.time.toString())
                     is TransactionUiModel -> TransactionItem(dashboardUiModel)
                     null -> Unit
                 }
+            }
 
+            transactionsPagingItems.apply {
+                when {
+                    loadState.refresh is LoadState.Loading -> {
+                        if (transactionsPagingItems.itemCount == 0) {
+                            item {
+                                Box(
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(600.dp),
+                                    contentAlignment = Alignment.Center,
+                                ) {
+                                    InitialLoadingWidget()
+                                }
+                            }
+                        }
+                    }
+
+                    loadState.refresh is LoadState.Error -> Unit
+                    loadState.append is LoadState.Loading -> {
+                        item {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(50.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                InitialLoadingWidget()
+                            }
+                        }
+                    }
+                    loadState.append is LoadState.Error -> Unit
+                }
             }
         }
     }

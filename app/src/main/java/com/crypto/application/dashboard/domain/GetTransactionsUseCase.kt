@@ -15,7 +15,7 @@ class GetTransactionsUseCase @Inject constructor(
     fun invoke(): Flow<PagingData<TransactionsEntity>> = Pager(
         PagingConfig(
             pageSize = 20,
-            prefetchDistance = 20
+            prefetchDistance = 10
         )
     ) { transactionsRepository.getAllTransaction() }.flow
 
